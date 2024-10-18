@@ -60,15 +60,31 @@ class BibliotecarioController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $libro = Libro::findOrFail($id);
+    
+        return view('bibliotecario.edit', compact('libro'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'titulo' => 'required|string|max:255',
+            'autor' => 'required|string|max:255',
+            'cantidad_disponible' => 'required|integer|min:0',
+        ]);
+    
+        $libro = Libro::findOrFail($id);
+    
+        $libro->update([
+            'titulo' => $request->titulo,
+            'autor' => $request->autor,
+            'cantidad_disponible' => $request->cantidad_disponible,
+        ]);
+    
+        return redirect()->route('bibliotecario.index')->with('success', 'Libro actualizado correctamente.');
     }
 
     /**
